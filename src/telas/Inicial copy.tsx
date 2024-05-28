@@ -1,15 +1,10 @@
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { Cabecalho } from '../componentes/Cabecalho';
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync, LocationObject, watchPositionAsync, LocationAccuracy } from 'expo-location';
 import { useEffect, useState, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { Entypo, MaterialIcons,FontAwesome5, MaterialCommunityIcons, Feather  } from '@expo/vector-icons'
 
 export const Inicial = () => {
-
-  // armazena uma localização incial, o useSatate recebe um objeto comn os parametros abaixo
-  // let [regiao, setRegiao] = useState({latitude: -23.4422149, longitude: -46.9235461, latitudeDelta: 0.0014, longitudeDelta: 0.014});
-
   // armazena a posicao atual em estado, para carregar no mapa
   // inicialmente terá um padrão como nulo
   // define uma tipagem do estado (com dados de latitude e longitude) ou nulo
@@ -79,54 +74,9 @@ export const Inicial = () => {
             coordinate={{
               latitude: localizacao.coords.latitude,
               longitude: localizacao.coords.longitude,
-            }}>
-          </Marker>
-
-           
-
-        <Marker
-          coordinate={{
-            latitude: -22.91478,
-            longitude: -47.06824,
-          }}>
-
-              <View style={estilos.marcadorConteiner}>
-                  {/* <Image 
-                  source={{uri: 'https://img.freepik.com/vetores-premium/simbolo-de-localizacao-do-ponto-de-pino-vermelho-isolado-no-fundo-branco_120819-396.jpg?w=826'}}
-                  style={estilos.markerImagem}
-                  />
-
-                  <Text>
-                  Bebedouro, oficina do 1° andar (bloco B) 
-                  </Text> */}
-                  <Feather name="radio" size={24} color="black" />
-              </View>
-
-          </Marker>
-
-
-          <Marker
-          coordinate={{
-            latitude: -22.91421,
-            longitude: -47.06828,
-          }}>
-              <View style={estilos.marcadorConteiner}>
-                  <Feather name="radio" size={24} color="black" />
-              </View>
-          </Marker>
-
-          <Marker
-          coordinate={{
-            latitude: -22.91408,
-            longitude:  -47.06843,
-          }}>
-              <View style={estilos.marcadorConteiner}>
-                  <Feather name="radio" size={24} color="black" />
-              </View>
-          </Marker>
+            }}
+          />
         </MapView>
-
-
       )}
     </View>
   );
@@ -141,21 +91,4 @@ const estilos = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-  marcadorConteiner:{
-    width: 90,
-    height: 70,
-    flexDirection: 'column',
-    borderRadius: 8,
-    overflow: 'hidden',
-    alignItems: 'center'
-  },
-  markerImagem:{
-    width: 90,
-    height: 45,
-    resizeMode: 'cover'
-  },
 });
-
-// Bebedouro, oficina do 1° andar (bloco B) Lat. 22.91478° S	Long. 47.06824° O
-// Corredor do bloco A para o bloco B Lat. 22.91421° S	Long. 47.06828° O
-// Passagem da entrada principal Lat. 22.91408° S	Long. 47.06843° O
