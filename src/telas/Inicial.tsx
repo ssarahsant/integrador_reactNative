@@ -4,26 +4,26 @@ import { requestForegroundPermissionsAsync, getCurrentPositionAsync, LocationObj
 import { useEffect, useState, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Entypo, MaterialIcons,FontAwesome5, MaterialCommunityIcons, Feather  } from '@expo/vector-icons'
-
+ 
 export const Inicial = () => {
-
+ 
   // armazena uma localização incial, o useSatate recebe um objeto comn os parametros abaixo
   // let [regiao, setRegiao] = useState({latitude: -23.4422149, longitude: -46.9235461, latitudeDelta: 0.0014, longitudeDelta: 0.014});
-
+ 
   // armazena a posicao atual em estado, para carregar no mapa
   // inicialmente terá um padrão como nulo
   // define uma tipagem do estado (com dados de latitude e longitude) ou nulo
   const [localizacao, setLocalizacao] = useState<LocationObject | null>(null);
-
+ 
   // criação de uma referencia
   const referenciaMapa = useRef<MapView>(null);
-
+ 
   // solicita permissão para o usuário para acessar sua localização
   async function solicitaPermissao() {
     // desestrutura para acessar a permissão
     // utiliza o await para aguardar
     const { granted } = await requestForegroundPermissionsAsync();
-
+ 
     // realiza uma verificação para saber se o usuário concedeu a permissão
     if (granted) {
       // se for autorizado usa um método para obter a localização do usuário
@@ -33,13 +33,13 @@ export const Inicial = () => {
       console.log(posicaoAtual);
     }
   }
-
+ 
   // utilização da função
   // no momento que a interface for renderizada chama o método de solicitação da permissão
   useEffect(() => {
     solicitaPermissao();
   }, []);
-
+ 
   // função para observar alterações na localização
   // construção de um listener dentro do useEffect
   // passa o objeto com configurações
@@ -60,7 +60,7 @@ export const Inicial = () => {
       }
     );
   }, []);
-
+ 
   return (
     <View style={estilos.conteiner}>
       <Cabecalho titulo="Localizador" />
@@ -81,57 +81,54 @@ export const Inicial = () => {
               longitude: localizacao.coords.longitude,
             }}>
           </Marker>
-
+ 
            
-
+ 
         <Marker
           coordinate={{
             latitude: -22.91478,
             longitude: -47.06824,
-          }}>
-
-              <View style={estilos.marcadorConteiner}>
-                  {/* <Image 
+          }}
+          pinColor="blue">
+ 
+              {/* <View style={estilos.marcadorConteiner}>
+                  <Image
                   source={{uri: 'https://img.freepik.com/vetores-premium/simbolo-de-localizacao-do-ponto-de-pino-vermelho-isolado-no-fundo-branco_120819-396.jpg?w=826'}}
                   style={estilos.markerImagem}
                   />
-
+ 
                   <Text>
-                  Bebedouro, oficina do 1° andar (bloco B) 
-                  </Text> */}
+                  Bebedouro, oficina do 1° andar (bloco B)
+                  </Text>
                   <Feather name="radio" size={24} color="black" />
-              </View>
-
+              </View> */}
+ 
           </Marker>
-
-
+ 
+ 
           <Marker
           coordinate={{
             latitude: -22.91421,
             longitude: -47.06828,
-          }}>
-              <View style={estilos.marcadorConteiner}>
-                  <Feather name="radio" size={24} color="black" />
-              </View>
+          }}
+          pinColor="blue">
           </Marker>
-
+ 
           <Marker
           coordinate={{
             latitude: -22.91408,
             longitude:  -47.06843,
-          }}>
-              <View style={estilos.marcadorConteiner}>
-                  <Feather name="radio" size={24} color="black" />
-              </View>
+          }}
+          pinColor="blue">
           </Marker>
         </MapView>
-
-
+ 
+ 
       )}
     </View>
   );
 };
-
+ 
 const estilos = StyleSheet.create({
   conteiner: {
     flex: 1,
@@ -155,7 +152,7 @@ const estilos = StyleSheet.create({
     resizeMode: 'cover'
   },
 });
-
-// Bebedouro, oficina do 1° andar (bloco B) Lat. 22.91478° S	Long. 47.06824° O
-// Corredor do bloco A para o bloco B Lat. 22.91421° S	Long. 47.06828° O
-// Passagem da entrada principal Lat. 22.91408° S	Long. 47.06843° O
+ 
+// Bebedouro, oficina do 1° andar (bloco B) Lat. 22.91478° S  Long. 47.06824° O
+// Corredor do bloco A para o bloco B Lat. 22.91421° S  Long. 47.06828° O
+// Passagem da entrada principal Lat. 22.91408° S Long. 47.06843° O
