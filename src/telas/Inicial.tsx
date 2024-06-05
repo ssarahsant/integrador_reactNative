@@ -1,158 +1,149 @@
-import { StyleSheet, View, Image, Text } from 'react-native';
-import { Cabecalho } from '../componentes/Cabecalho';
-import { requestForegroundPermissionsAsync, getCurrentPositionAsync, LocationObject, watchPositionAsync, LocationAccuracy } from 'expo-location';
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { Entypo, MaterialIcons,FontAwesome5, MaterialCommunityIcons, Feather  } from '@expo/vector-icons'
- 
-export const Inicial = () => {
- 
-  // armazena uma localização incial, o useSatate recebe um objeto comn os parametros abaixo
-  // let [regiao, setRegiao] = useState({latitude: -23.4422149, longitude: -46.9235461, latitudeDelta: 0.0014, longitudeDelta: 0.014});
- 
-  // armazena a posicao atual em estado, para carregar no mapa
-  // inicialmente terá um padrão como nulo
-  // define uma tipagem do estado (com dados de latitude e longitude) ou nulo
-  const [localizacao, setLocalizacao] = useState<LocationObject | null>(null);
- 
-  // criação de uma referencia
-  const referenciaMapa = useRef<MapView>(null);
- 
-  // solicita permissão para o usuário para acessar sua localização
-  async function solicitaPermissao() {
-    // desestrutura para acessar a permissão
-    // utiliza o await para aguardar
-    const { granted } = await requestForegroundPermissionsAsync();
- 
-    // realiza uma verificação para saber se o usuário concedeu a permissão
-    if (granted) {
-      // se for autorizado usa um método para obter a localização do usuário
-      const posicaoAtual = await getCurrentPositionAsync();
-      // armazena no estado a posição atual, para carregar a região do mapa (localização do mapa)
-      setLocalizacao(posicaoAtual);
-      console.log(posicaoAtual);
+import * as Location from 'expo-location';
+import styles from './Style';
+import {useNavigation} from '@react-navigation/native'
+
+
+export function Inicial () {
+    const navigation = useNavigation()
+
+    const[sensorProximo, setSensorProximo] = useState(null);
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    
+    const [la, setLa] = useState(null)
+    const [lo, setLo] = useState(null)
+
+    const [distance1, setDistance1] = useState(null); // Distância até o ponto fixo 1
+    const [distance2, setDistance2] = useState(null); // Distância até o ponto fixo 2
+    const [temp, setTemp] = useState(null)
+    const [x, setX] = useState(null)
+
+
+    const initialRegion = {
+        latitude: -22.9140639,
+        longitude: -47.068686,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+    };
+
+    const haversine = (lat1, lon1, lat2, lon2) => {
+        const toRad = (value) => (value * Math.PI) / 180;
+
+        const R = 6371000; // Raio da Terra em metros
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const d = R * c; // Distância em metros
+
+        return d;
+    };
+
+    const fixedPoints = [
+        {
+            id: 1,
+            latitude: -22.9140639, // Exemplo de coordenada 1
+            longitude: -47.068065, // Exemplo de coordenada 1
+        },
+        {
+            id: 2,
+            latitude: -22.9141804, // Exemplo de coordenada 2
+            longitude: -47.0683294, // Exemplo de coordenada 2
+        }
+    ];
+
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            const locationSubscription = await Location.watchPositionAsync(
+                {
+                    accuracy: Location.Accuracy.High,
+                    timeInterval: 1000,
+                    distanceInterval: 1,
+                },
+                (newLocation) => {
+                    setLocation(newLocation.coords);
+                    setLa(newLocation.coords.latitude)
+                    setLo(newLocation.coords.longitude)
+
+                    // Calcular a distância entre a localização atual e os pontos fixos
+                    const distanceToFixedPoint1 = haversine(la, lo, fixedPoints[0]['latitude'], fixedPoints[0]['longitude']);
+                    const distanceToFixedPoint2 = haversine(la, lo, fixedPoints[1]['latitude'], fixedPoints[1]['longitude']);
+                    setDistance1(distanceToFixedPoint1);
+                    setDistance2(distanceToFixedPoint2);
+                    if (distanceToFixedPoint1 <= distanceToFixedPoint2) {
+                        const sensor = fixedPoints[0]
+                        setSensorProximo(sensor)
+                        console.log(`Latitude: ${sensor.latitude}`)
+                        console.log(`Longitude: ${sensor.longitude}`)
+                        
+                        setTemp(fixedPoints[0]['temp'])
+                    } else {
+                        const sensor = fixedPoints[1]
+                        setSensorProximo(fixedPoints[1])
+                        console.log(`Latitude: ${sensor.latitude}`)
+                        console.log(`Longitude: ${sensor.longitude}`)
+                        setTemp(fixedPoints[1]['temp'])
+                    }
+
+                }
+
+            );
+
+            return () => {
+                locationSubscription.remove();
+            };
+        })();
+    }, []);
+
+    let text = 'Waiting...';
+    if (errorMsg) {
+        text = errorMsg;
+    } else if (location) {
+        text = `Latitude: ${location.latitude}, Longitude: ${location.longitude}`;
+
     }
-  }
- 
-  // utilização da função
-  // no momento que a interface for renderizada chama o método de solicitação da permissão
-  useEffect(() => {
-    solicitaPermissao();
-  }, []);
- 
-  // função para observar alterações na localização
-  // construção de um listener dentro do useEffect
-  // passa o objeto com configurações
-  useEffect(() => {
-    watchPositionAsync(
-      {
-        accuracy: LocationAccuracy.Highest,
-        timeInterval: 1000,
-        distanceInterval: 1,
-      },
-      (atualizaLocalizacao) => {
-        console.log("Nova localização", atualizaLocalizacao);
-        setLocalizacao(atualizaLocalizacao);
-        referenciaMapa.current?.animateCamera({
-          pitch: 70,
-          center: atualizaLocalizacao.coords,
-        });
-      }
+
+    return (
+        <View style={styles.container}>
+            <MapView
+                style={styles.map}
+                initialRegion={initialRegion}
+            >
+                <Marker coordinate={{ latitude: -22.915, longitude: -47.0678 }} />
+                {fixedPoints.map(point => (
+                    <Marker
+                        key={point.id}
+                        coordinate={{ latitude: point.latitude, longitude: point.longitude }}
+                        pinColor="blue" // Cor do marcador para os pontos fixos
+                    />
+                ))}
+                {location && (
+                    <Marker
+                        coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+                        pinColor="red" // Cor do marcador para a localização atual
+                    />
+                )}
+            </MapView>
+
+            <View style={styles.cxs}>
+                <View style={styles.cx}><Text style={styles.cxTxt}>Latitude: </Text><Text style={styles.cxTxt}>{la}</Text></View>
+                <View style={styles.cx}><Text style={styles.cxTxt}>Longitude: </Text><Text style={styles.cxTxt}>{lo}</Text></View>
+                <View style={styles.cx}><Text style={styles.cxTxt}>Distância até o ponto fixo 1: </Text>{distance1 !== null && <Text style={styles.cxTxt}>{distance1.toFixed(1)} metros</Text>}</View>
+                <View style={styles.cx}><Text style={styles.cxTxt}>Distância até o ponto fixo 2: </Text>{distance1 !== null && <Text style={styles.cxTxt}>{distance1.toFixed(2)} metros</Text>}</View>
+                <View style={styles.cx}><Text style={styles.cxTxt}>Temperatura:</Text><Text style={styles.cxTxt}>{temp}ºC</Text></View>
+            </View>
+        </View>
     );
-  }, []);
- 
-  return (
-    <View style={estilos.conteiner}>
-      <Cabecalho titulo="Localizador" />
-      {localizacao && (
-        <MapView
-          ref={referenciaMapa}
-          style={estilos.mapa}
-          initialRegion={{
-            latitude: localizacao.coords.latitude,
-            longitude: localizacao.coords.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
-          }}
-        >
-          <Marker
-            coordinate={{
-              latitude: localizacao.coords.latitude,
-              longitude: localizacao.coords.longitude,
-            }}>
-          </Marker>
- 
-           
- 
-        <Marker
-          coordinate={{
-            latitude: -22.91478,
-            longitude: -47.06824,
-          }}
-          pinColor="blue">
- 
-              {/* <View style={estilos.marcadorConteiner}>
-                  <Image
-                  source={{uri: 'https://img.freepik.com/vetores-premium/simbolo-de-localizacao-do-ponto-de-pino-vermelho-isolado-no-fundo-branco_120819-396.jpg?w=826'}}
-                  style={estilos.markerImagem}
-                  />
- 
-                  <Text>
-                  Bebedouro, oficina do 1° andar (bloco B)
-                  </Text>
-                  <Feather name="radio" size={24} color="black" />
-              </View> */}
- 
-          </Marker>
- 
- 
-          <Marker
-          coordinate={{
-            latitude: -22.91421,
-            longitude: -47.06828,
-          }}
-          pinColor="blue">
-          </Marker>
- 
-          <Marker
-          coordinate={{
-            latitude: -22.91408,
-            longitude:  -47.06843,
-          }}
-          pinColor="blue">
-          </Marker>
-        </MapView>
- 
- 
-      )}
-    </View>
-  );
-};
- 
-const estilos = StyleSheet.create({
-  conteiner: {
-    flex: 1,
-    backgroundColor: '#080a0c',
-  },
-  mapa: {
-    flex: 1,
-    width: '100%',
-  },
-  marcadorConteiner:{
-    width: 90,
-    height: 70,
-    flexDirection: 'column',
-    borderRadius: 8,
-    overflow: 'hidden',
-    alignItems: 'center'
-  },
-  markerImagem:{
-    width: 90,
-    height: 45,
-    resizeMode: 'cover'
-  },
-});
- 
-// Bebedouro, oficina do 1° andar (bloco B) Lat. 22.91478° S  Long. 47.06824° O
-// Corredor do bloco A para o bloco B Lat. 22.91421° S  Long. 47.06828° O
-// Passagem da entrada principal Lat. 22.91408° S Long. 47.06843° O
+}
