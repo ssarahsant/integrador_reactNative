@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../componentes/AuthContext';
 
 export const FormularioUsuario: React.FC = () => {
+    const [email, setEmail] = useState('');
     const [usuario, setUsuario] = useState('');
     const [senha, setSenha] = useState('');
     const navigation = useNavigation();
@@ -17,6 +18,7 @@ export const FormularioUsuario: React.FC = () => {
             const response = await axios.post(
                 'http://10.0.2.2:8000/api/create_user/',
                 {
+                    email: email,
                     username: usuario,
                     password: senha
                 }
@@ -31,12 +33,22 @@ export const FormularioUsuario: React.FC = () => {
     };
 
     return (
-        <View style={estilos.conteiner}>
-            <View style={estilos.conteinerCampos}>
+        <View>
+            <Text style={estilos.titulo}>Cadastro de Usuário</Text>
+            <View>
+                <TextInput
+                    style={estilos.campo}
+                    placeholder="Email"
+                    placeholderTextColor="#fff"
+                    keyboardType="default"
+                    onChangeText={setEmail}
+                    value={email}
+                />
+
                 <TextInput
                     style={estilos.campo}
                     placeholder="Usuário"
-                    placeholderTextColor="#01233c"
+                    placeholderTextColor="#fff"
                     keyboardType="default"
                     onChangeText={setUsuario}
                     value={usuario}
@@ -44,47 +56,54 @@ export const FormularioUsuario: React.FC = () => {
                 <TextInput
                     style={estilos.campo}
                     placeholder="Senha"
-                    placeholderTextColor="#01233c"
+                    placeholderTextColor="#fff"
                     secureTextEntry={true}
                     onChangeText={setSenha}
                     value={senha}
                 />
             </View>
             <TouchableOpacity style={estilos.botao} onPress={fazerCadastro}>
-                <Feather name="user-plus" size={24} color="#dee2e6" />
+                <Text style={estilos.textoBotao}>Cadastrar</Text>
             </TouchableOpacity>
+
         </View>
     );
 };
 
 const estilos = StyleSheet.create({
-    conteiner: {
-        flexDirection: 'row',
+    container: {
+        flex: 1,
+        backgroundColor: '#000',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 5,
-        paddingVertical: 10,
-        marginVertical: 10,
-    },
-    conteinerCampos: {
-        flex: 1,
     },
     campo: {
         height: 50,
-        backgroundColor: '#dee2e6',
-        color: '#01233c',
+        width: 300,
+        backgroundColor: '#2b2d42',
+        color: '#fff',
         marginVertical: 5,
         borderRadius: 5,
         padding: 10,
         fontSize: 16,
     },
     botao: {
-        width: 60,
-        height: 120,
-        marginStart: 10,
+        height: 50,
+        width: 300,
         backgroundColor: '#2b2d42',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
+        marginVertical: 20,
     },
+    textoBotao: {
+        color: '#fff',
+        fontSize: 16,
+    },
+    titulo: {
+        color: '#fff',
+        fontSize: 28,
+        textAlign: 'center',
+        marginVertical: 20,
+    }
 });

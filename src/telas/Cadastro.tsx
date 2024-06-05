@@ -7,7 +7,7 @@ import { FormularioUsuario } from '../componentes/FormularioUsuario';
 export const Cadastro = () => {
     return (
         <>
-            <Cabecalho titulo="Cadastre-se" />
+            <Cabecalho titulo="" />
             <View style={estilos.conteiner}>
                 <FormularioUsuario />
             </View>
