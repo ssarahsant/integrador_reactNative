@@ -3,16 +3,16 @@ import { Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import styles from './Style';
-import {useNavigation} from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 
 
-export function Inicial () {
+export function Inicial() {
     const navigation = useNavigation()
 
-    const[sensorProximo, setSensorProximo] = useState(null);
+    const [sensorProximo, setSensorProximo] = useState(null);
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    
+
     const [la, setLa] = useState(null)
     const [lo, setLo] = useState(null)
 
@@ -87,7 +87,7 @@ export function Inicial () {
                         setSensorProximo(sensor)
                         console.log(`Latitude: ${sensor.latitude}`)
                         console.log(`Longitude: ${sensor.longitude}`)
-                        
+
                         setTemp(fixedPoints[0]['temp'])
                     } else {
                         const sensor = fixedPoints[1]

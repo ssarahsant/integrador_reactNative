@@ -1,5 +1,5 @@
 // Login.tsx
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
@@ -11,10 +11,10 @@ export const Login = () => {
     const navigation = useNavigation();
     const { setToken } = useAuth();
 
-  
+
 
     const fazerLogin = async () => {
-        
+
         try {
             const response = await axios.post(
                 'http://10.0.2.2:8000/api/token/',
@@ -22,7 +22,7 @@ export const Login = () => {
                     username: usuario,
                     password: senha
                 },
-                
+
             );
             const token = response.data.access;
             console.log('Login bem-sucedido:', token);

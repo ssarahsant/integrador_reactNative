@@ -6,9 +6,9 @@ import { useAuth } from '../componentes/AuthContext';
 
 export const CadastroSensores = () => {
   const [tipo, setTipo] = useState('');
-  const [macAddress, setMacAddress] = useState(null);
-  const [latitude, setLatitude] = useState(0);
-  const [longitude, setLongitude] = useState(0);
+  const [macAddress, setMacAddress] = useState('');
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
   const [localizacao, setLocalizacao] = useState('');
   const [responsavel, setResponsavel] = useState('');
   const [unidadeMedida, setUnidadeMedida] = useState('');
@@ -22,92 +22,87 @@ export const CadastroSensores = () => {
     axios.post('http://10.0.2.2:8000/api/sensores/', {
       tipo: tipo,
       mac_address: macAddress,
-      latitude: latitude,
-      longitude: longitude,
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
       localizacao: localizacao,
       responsavel: responsavel,
       unidade_medida: unidadeMedida,
       status_operacional: statusOperacional,
-      observacao:observacao
+      observacao: observacao
     },
-        {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-    }
-    )
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
     .then(response => {
       console.log('Cadastro bem-sucedido:', response.data);
       Alert.alert('Cadastrado', 'Sensor cadastrado com sucesso');
-      
     })
     .catch(error => {
       console.error('Erro no cadastro:', error);
-      Alert.alert('Erro', 'Erro ao cadastra sensores');
+      Alert.alert('Erro', 'Erro ao cadastrar sensores');
     });
   };
 
   return (
     <View style={estilos.container}>
-      <Image
-        style={estilos.logo}
-        source={require('../../assets/logo.png')}
-      />
+      <Text style={estilos.titulo}>Cadastro de Usuário</Text>
       <TextInput
         style={estilos.campo}
         placeholder='Tipo'
-        placeholderTextColor='#e1e5f2'
+        placeholderTextColor='#fff'
         onChangeText={setTipo}
         value={tipo}
       />
       <TextInput
         style={estilos.campo}
         placeholder='MAC Address'
-        placeholderTextColor='#e1e5f2'
+        placeholderTextColor='#fff'
         onChangeText={setMacAddress}
         value={macAddress}
       />
       <TextInput
         style={estilos.campo}
         placeholder='Latitude'
-        placeholderTextColor='#e1e5f2'
+        placeholderTextColor='#fff'
         keyboardType='numeric'
-        onChangeText={text => setLatitude(parseFloat(text))}
-        value={latitude.toString()}
+        onChangeText={text => setLatitude(text)}
+        value={latitude}
       />
       <TextInput
         style={estilos.campo}
         placeholder='Longitude'
-        placeholderTextColor='#e1e5f2'
+        placeholderTextColor='#fff'
         keyboardType='numeric'
-        onChangeText={text => setLongitude(parseFloat(text))}
-        value={longitude.toString()}
+        onChangeText={text => setLongitude(text)}
+        value={longitude}
       />
       <TextInput
         style={estilos.campo}
         placeholder='Localização'
-        placeholderTextColor='#e1e5f2'
+        placeholderTextColor='#fff'
         onChangeText={setLocalizacao}
         value={localizacao}
       />
       <TextInput
         style={estilos.campo}
         placeholder='Responsável'
-        placeholderTextColor='#e1e5f2'
+        placeholderTextColor='#fff'
         onChangeText={setResponsavel}
         value={responsavel}
       />
       <TextInput
         style={estilos.campo}
         placeholder='Unidade de Medida'
-        placeholderTextColor='#e1e5f2'
+        placeholderTextColor='#fff'
         onChangeText={setUnidadeMedida}
         value={unidadeMedida}
       />
       <TextInput
         style={estilos.campo}
         placeholder='Observação'
-        placeholderTextColor='#e1e5f2'
+        placeholderTextColor='#fff'
         onChangeText={setObservacao}
         value={observacao}
       />
@@ -131,7 +126,7 @@ const estilos = StyleSheet.create({
   campo: {
     height: 50,
     width: 300,
-    backgroundColor: '#4f030a',
+    backgroundColor: '#2b2d42',
     color: '#fff',
     marginVertical: 5,
     borderRadius: 5,
@@ -141,7 +136,7 @@ const estilos = StyleSheet.create({
   botao: {
     height: 50,
     width: 300,
-    backgroundColor: '#4f030a',
+    backgroundColor: '#2b2d42',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
@@ -151,10 +146,10 @@ const estilos = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  logo: {
-    height: 105,
-    width: 170,
-    marginBottom: 50,
-    marginTop: -155
-  }
+  titulo: {
+    color: '#fff',
+    fontSize: 28,
+    textAlign: 'center',
+    marginVertical: 20,
+}
 });

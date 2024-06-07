@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Cabecalho } from '../componentes/Cabecalho'
 import { FormularioUsuario } from '../componentes/FormularioUsuario'
 import { ListaUsuarios } from "../componentes/ListaUsuarios"
 import uuid from 'react-native-uuid'
@@ -43,10 +42,6 @@ export const Usuarios = () => {
 
     return(
         <View style={estilos.conteiner}>
-
-            <Cabecalho 
-                titulo="Cadastro de usuários"
-            />
 
             <FormularioUsuario 
                 adicionar={adicionarUsuario}

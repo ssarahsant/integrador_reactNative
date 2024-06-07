@@ -35,7 +35,7 @@ export const ListaUsuarios = ({colecao, remover}: ListaUsuariosProps) => {
                 )}
                 ListEmptyComponent={() => (
                     <Text style={estilos.texto}>
-                        Nenhum usuário armazenado.
+                        {/* Nenhum usuário armazenado. */}
                     </Text>
                 )}                
             />

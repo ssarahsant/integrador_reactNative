@@ -110,8 +110,9 @@ const estilos = StyleSheet.create({
     },
     campo: {
         height: 50,
-        backgroundColor: '#dee2e6',
-        color: '#01233c',
+        width: 300,
+        backgroundColor: '#2b2d42',
+        color: '#fff',
         marginVertical: 5,
         borderRadius: 5,
         padding: 10,

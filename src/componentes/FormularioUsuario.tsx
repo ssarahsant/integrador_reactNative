@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../componentes/AuthContext';
@@ -33,7 +32,7 @@ export const FormularioUsuario: React.FC = () => {
     };
 
     return (
-        <View>
+        <View style={estilos.container}>
             <Text style={estilos.titulo}>Cadastro de Usuário</Text>
             <View>
                 <TextInput
@@ -63,9 +62,8 @@ export const FormularioUsuario: React.FC = () => {
                 />
             </View>
             <TouchableOpacity style={estilos.botao} onPress={fazerCadastro}>
-                <Text style={estilos.textoBotao}>Cadastrar</Text>
+                <Text style={estilos.textoBotao}>Cadastrar Usuário</Text>
             </TouchableOpacity>
-
         </View>
     );
 };

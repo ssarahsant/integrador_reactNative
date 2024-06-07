@@ -1,17 +1,14 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Cabecalho } from '../componentes/Cabecalho';
 import { FormularioUsuario } from '../componentes/FormularioUsuario';
 
 
 export const Cadastro = () => {
     return (
-        <>
-            <Cabecalho titulo="" />
-            <View style={estilos.conteiner}>
-                <FormularioUsuario />
-            </View>
-        </>
+        <View style={estilos.conteiner}>
+            <FormularioUsuario />
+        </View>
+
     );
 };
 
