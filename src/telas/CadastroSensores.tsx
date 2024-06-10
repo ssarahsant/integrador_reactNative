@@ -47,7 +47,7 @@ export const CadastroSensores = () => {
 
   return (
     <View style={estilos.container}>
-      <Text style={estilos.titulo}>Cadastro de Usuário</Text>
+      <Text style={estilos.titulo}>Cadastro de Sensor</Text>
       <TextInput
         style={estilos.campo}
         placeholder='Tipo'

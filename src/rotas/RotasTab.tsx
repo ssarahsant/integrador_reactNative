@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Inicial } from '../telas/Inicial';
 import { Usuarios } from '../telas/Usuarios';
 import { CadastroSensores } from '../telas/CadastroSensores';
-// import { Feather } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -29,9 +29,9 @@ export function RotasTab() {
                 component={Inicial}
                 options={{
                     tabBarLabel: 'Inicial',
-                    // tabBarIcon: ({ color, size }) => (
-                    //     <Feather name="home" size={size} color={color} /> 
-                    // )
+                    tabBarIcon: ({ color, size }) => (
+                        <Feather name="home" size={size} color={color} /> 
+                    )
                 }}
             />
 
@@ -40,9 +40,9 @@ export function RotasTab() {
                 component={Usuarios}
                 options={{
                     tabBarLabel: 'Usuários',
-                    // tabBarIcon: ({ color, size }) => (
-                    //     <Feather name="users" size={size} color={color} /> 
-                    // )
+                    tabBarIcon: ({ color, size }) => (
+                        <Feather name="users" size={size} color={color} /> 
+                    )
                 }}                
             />
 
@@ -51,9 +51,9 @@ export function RotasTab() {
                 component={CadastroSensores}
                 options={{
                     tabBarLabel: 'Sensores',
-                    // tabBarIcon: ({ color, size }) => (
-                    //     <Feather name="map-pin" size={size} color={color} /> 
-                    // )
+                    tabBarIcon: ({ color, size }) => (
+                        <Feather name="map-pin" size={size} color={color} /> 
+                    )
                 }}                
             />
 
